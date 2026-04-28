@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-ancestors 'none'; script-src https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.propellerads.com https://*.onclckmn.com 'unsafe-inline'; style-src 'unsafe-inline'; img-src https: data:; connect-src https:; frame-src https:;"
+    />
+    <title>Ad Frame</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+      }
+
+      #slot {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="slot"></div>
+
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var provider = params.get('provider');
+        var slot = document.getElementById('slot');
+
+        var postStatus = function (status) {
+          try {
+            window.parent.postMessage(
+              {
+                source: 'receipt-ad-frame',
+                type: 'ads-frame-status',
+                status: status,
+              },
+              window.location.origin
+            );
+          } catch (e) {
+            // noop
+          }
+        };
+
+        var safe = function (value, pattern) {
+          if (!value) {
+            return '';
+          }
+          return pattern.test(value) ? value : '';
+        };
+
+        if (!slot || !provider) {
+          postStatus('error');
+          return;
+        }
+
+        if (provider === 'adsense') {
+          var client = safe(params.get('client') || '', /^ca-pub-[0-9]{10,20}$/);
+          var adSlot = safe(params.get('slot') || '', /^[0-9]{6,20}$/);
+
+          if (!client || !adSlot) {
+            postStatus('error');
+            return;
+          }
+
+          var ins = document.createElement('ins');
+          ins.className = 'adsbygoogle';
+          ins.style.display = 'block';
+          ins.style.width = '100%';
+          ins.style.height = '100%';
+          ins.setAttribute('data-ad-client', client);
+          ins.setAttribute('data-ad-slot', adSlot);
+          ins.setAttribute('data-ad-format', 'auto');
+          ins.setAttribute('data-full-width-responsive', 'true');
+          slot.appendChild(ins);
+
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(client);
+          script.crossOrigin = 'anonymous';
+          script.referrerPolicy = 'no-referrer';
+          script.onload = function () {
+            try {
+              window.adsbygoogle = window.adsbygoogle || [];
+              window.adsbygoogle.push({});
+              postStatus('ready');
+            } catch (e) {
+              postStatus('blocked');
+            }
+          };
+          script.onerror = function () {
+            postStatus('blocked');
+          };
+          document.head.appendChild(script);
+          return;
+        }
+
+        if (provider === 'propeller') {
+          var zoneId = safe(params.get('zoneId') || '', /^[A-Za-z0-9]{6,40}$/);
+
+          if (!zoneId) {
+            postStatus('error');
+            return;
+          }
+
+          var container = document.createElement('div');
+          container.id = 'propeller-zone';
+          container.style.width = '100%';
+          container.style.height = '100%';
+          slot.appendChild(container);
+
+          var propellerScript = document.createElement('script');
+          propellerScript.async = true;
+          propellerScript.src = 'https://go.propellerads.com/?id=' + encodeURIComponent(zoneId);
+          propellerScript.referrerPolicy = 'no-referrer';
+          propellerScript.onload = function () {
+            postStatus('ready');
+          };
+          propellerScript.onerror = function () {
+            postStatus('blocked');
+          };
+          document.head.appendChild(propellerScript);
+          return;
+        }
+
+        postStatus('error');
+      })();
+    </script>
+  </body>
+</html>

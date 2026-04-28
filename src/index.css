@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	.date-input::-webkit-calendar-picker-indicator {
+		cursor: pointer;
+		opacity: 0.85;
+	}
+
+	.dark .date-input::-webkit-calendar-picker-indicator {
+		filter: invert(1) brightness(1.15) contrast(1.1);
+		opacity: 0.95;
+	}
+}

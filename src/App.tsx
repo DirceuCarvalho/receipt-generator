@@ -47,7 +47,7 @@ function App() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
                 <img
-                  src="/favicon.svg"
+                  src="/receipt-icon.svg"
                   alt="Ícone do Gerador de Recibos"
                   className="w-8 h-8 rounded-lg"
                 />

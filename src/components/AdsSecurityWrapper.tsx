@@ -168,8 +168,9 @@ export function AdsSecurityWrapper() {
   }
 
   return (
-    <div ref={containerRef} className="fixed bottom-4 right-4 z-40 hidden lg:block" aria-live="polite">
-      <div className="w-[320px] h-[120px] rounded-lg overflow-hidden shadow-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+    <div ref={containerRef} className="w-full border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" aria-live="polite">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-center">
+      <div className="w-full max-w-[728px] h-[90px] overflow-hidden">
         {status === 'blocked' ? (
           <div className="w-full h-full flex items-center justify-center text-xs text-zinc-500 dark:text-zinc-400 px-4 text-center">
             Publicidade indisponivel.
@@ -185,6 +186,7 @@ export function AdsSecurityWrapper() {
             sandbox={frameSandbox}
           />
         )}
+      </div>
       </div>
     </div>
   );

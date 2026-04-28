@@ -25,7 +25,7 @@ export function ReceiptPreview() {
   const showReceiverSection = receiverName.length > 0 || receiverDocument.length > 0;
   
   const receiptNumber = useMemo(() => generateReceiptNumber(), []);
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date();
 
   return (
     <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-lg p-6">

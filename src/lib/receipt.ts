@@ -34,6 +34,21 @@ export const formatCurrency = (value: number): string => {
   }).format(value);
 };
 
+const parseDateForDisplay = (value: string | Date): Date => {
+  if (value instanceof Date) {
+    return value;
+  }
+
+  // Treat yyyy-mm-dd as a local date to avoid timezone shifting to previous day.
+  const localDateMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (localDateMatch) {
+    const [, year, month, day] = localDateMatch;
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  }
+
+  return new Date(value);
+};
+
 export const formatDocument = (doc: string): string => {
   const cleaned = doc.replace(/\D/g, '');
   if (cleaned.length === 11) {
@@ -45,13 +60,13 @@ export const formatDocument = (doc: string): string => {
   return doc;
 };
 
-export const formatDate = (dateStr: string): string => {
-  const date = new Date(dateStr);
+export const formatDate = (dateValue: string | Date): string => {
+  const date = parseDateForDisplay(dateValue);
   return new Intl.DateTimeFormat('pt-BR').format(date);
 };
 
-export const formatDateFull = (dateStr: string): string => {
-  const date = new Date(dateStr);
+export const formatDateFull = (dateValue: string | Date): string => {
+  const date = parseDateForDisplay(dateValue);
   return new Intl.DateTimeFormat('pt-BR', {
     year: 'numeric',
     month: 'long',

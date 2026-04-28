@@ -21,7 +21,11 @@ const requestIdle = (callback: () => void) => {
   globalThis.setTimeout(callback, 0);
 };
 
-export function AdsSecurityWrapper() {
+type AdsSecurityWrapperProps = {
+  slotId?: string;
+};
+
+export function AdsSecurityWrapper({ slotId }: AdsSecurityWrapperProps = {}) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const frameRef = useRef<HTMLIFrameElement | null>(null);
   const [inView, setInView] = useState(false);
@@ -31,7 +35,7 @@ export function AdsSecurityWrapper() {
 
   const provider = (import.meta.env.VITE_ADS_PROVIDER ?? 'adsense') as AdProvider;
   const adsenseClient = import.meta.env.VITE_ADSENSE_CLIENT_ID ?? '';
-  const adsenseSlot = import.meta.env.VITE_ADSENSE_SLOT_ID ?? '';
+  const adsenseSlot = slotId ?? import.meta.env.VITE_ADSENSE_SLOT_ID ?? '';
   const propellerZoneId = import.meta.env.VITE_PROPELLER_ZONE_ID ?? '';
   const frameSandbox =
     import.meta.env.VITE_ADS_IFRAME_SANDBOX ?? 'allow-scripts allow-popups';

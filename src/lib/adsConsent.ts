@@ -19,6 +19,20 @@ export const hasAdConsent = (): boolean => {
   return storage.getItem(ADS_CONSENT_KEY) === 'granted';
 };
 
+export const getAdConsentChoice = (): ConsentValue | null => {
+  const storage = safeLocalStorage();
+  if (!storage) {
+    return null;
+  }
+
+  const value = storage.getItem(ADS_CONSENT_KEY);
+  if (value === 'granted' || value === 'denied') {
+    return value;
+  }
+
+  return null;
+};
+
 const setAdConsent = (value: ConsentValue) => {
   const storage = safeLocalStorage();
   if (!storage) {

@@ -7,6 +7,7 @@ import { ReceiptForm } from './components/ReceiptForm';
 import { ReceiptPreview } from './components/ReceiptPreview';
 import { PrintActions } from './components/PrintActions';
 import { AdsSecurityWrapper } from './components/AdsSecurityWrapper';
+import { AdsConsentBanner } from './components/AdsConsentBanner';
 
 function App() {
   const [isDark, setIsDark] = useState(() => {
@@ -116,6 +117,7 @@ function App() {
         </div>
       </footer>
 
+      <AdsConsentBanner />
       <AdsSecurityWrapper />
     </div>
   );
